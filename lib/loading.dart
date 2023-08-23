@@ -1,4 +1,5 @@
 import 'package:bide_yako/home.dart';
+import 'package:bide_yako/utils/HelpfulFunctions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -39,8 +40,13 @@ class LoadingPage extends StatelessWidget {
   }
   void goToSplash(BuildContext context) async
   {
+    bool isOnline = await hasInternet();
     await Future.delayed(Duration(milliseconds: 3000));
 
-    Get.off(() => Home());
+    if(isOnline) {
+      Get.off(() => Home());
+    }
+    else
+      Get.defaultDialog(title: "Connect to internet",content: Text("Please turn on data or WIFI to continue"));
   }
 }
