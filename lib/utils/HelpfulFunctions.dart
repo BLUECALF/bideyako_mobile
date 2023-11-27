@@ -1,40 +1,9 @@
 import 'dart:io';
+import 'package:bide_yako/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
-String getNameInitials(full_name) {
-  if (full_name == null) {
-    return "";
-  }
-  List<String> names = full_name.split(" ");
-  String initials = "";
-  int numWords = 2;
-
-  numWords = names.length;
-  for (var i = 0; i < numWords; i++) {
-    if (names[i] == "") {
-      initials += "";
-    } else {
-      initials += '${names[i].substring(0, 1)}';
-      if (initials.length == 2) {
-        return initials;
-      }
-    }
-  }
-  return initials;
-}
-
-String getLastName({required String fullName}) {
-  List<String> nameList = fullName.split(" ");
-  print("name list is $nameList");
-  var lastname = nameList[nameList.length - 1];
-  if (lastname == " " || lastname == "" || lastname == "  ") {
-    return nameList[nameList.length - 2];
-  } else
-    return nameList[nameList.length - 1];
-}
 
 Future<bool> hasInternet() async {
   try {
@@ -72,3 +41,21 @@ Widget wrapper({required Widget childWidget}) {
   );
 }
 
+Widget buildIcon(IconData icon, int currentIndex,int selectedIndex) {
+  return Stack(
+    children: [
+      Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(7.sp),
+          shape: BoxShape.rectangle,
+          color: selectedIndex == currentIndex ? color_green_dark : color_white,
+        ),
+        padding: EdgeInsets.all(10.sp), // Adjust the padding as needed
+        child: Icon(
+          icon,
+          color: selectedIndex == currentIndex ? Colors.white : Colors.black,
+        ),
+      ),
+    ],
+  );
+}

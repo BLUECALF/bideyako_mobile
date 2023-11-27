@@ -1,6 +1,9 @@
 import 'dart:async';
-
+import 'package:bide_yako/styles/colors.dart';
+import 'package:bide_yako/utils/HelpfulFunctions.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class Home extends StatefulWidget {
@@ -9,7 +12,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final String targetUrl = 'https://dev.bideyako.com/';
+  String baseUrl = "https://dev.bideyako.com/";
+  List<String> _urls = [];
+
+  int _currentIndex = 0;
   bool isLoading = true;
   final _webViewController = Completer<WebViewController>();
 
@@ -18,6 +24,13 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    _urls = [
+      baseUrl,
+      baseUrl + "buybids",
+      baseUrl + "users/settings/7",
+      baseUrl + "users/settings/6",
+      baseUrl + "users/settings/1",
+    ];
     return Scaffold(
       key: _scaffoldKey,
       body: SafeArea(
@@ -41,7 +54,7 @@ class _HomeState extends State<Home> {
           child: Stack(
             children: [
               WebView(
-                initialUrl: targetUrl,
+                initialUrl: _urls[_currentIndex],
                 javascriptMode: JavascriptMode.unrestricted,
                 onPageStarted: (url) {
                   setState(() {
@@ -59,12 +72,54 @@ class _HomeState extends State<Home> {
               ),
               isLoading
                   ? Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  color: color_green_dark,
+                  strokeWidth: 2.sp,
+                ),
               )
                   : Container(),
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) async {
+          setState(() {
+            _currentIndex = index;
+          });
+          final controller = await _webViewController.future;
+          controller.loadUrl(_urls[_currentIndex]);
+        },
+        backgroundColor: color_white,
+        selectedItemColor: Colors.black, // Color for the selected tab
+        unselectedItemColor: Colors.black, // Color for unselected tabs
+        elevation: 0, // Elevation of the BottomNavigationBar
+        selectedFontSize: 12.0.sp, // Font size for the selected tab label
+        unselectedFontSize: 12.0.sp, // Font size for unselected tab labels
+        type: BottomNavigationBarType.fixed, // Ensure that labels are shown for all tabs
+        items: [
+          BottomNavigationBarItem(
+            icon: buildIcon(Icons.home_outlined, 0, _currentIndex),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: buildIcon(Icons.shopping_cart_outlined, 1, _currentIndex),
+            label: 'Buy Bids',
+          ),
+          BottomNavigationBarItem(
+            icon: buildIcon(Icons.emoji_events_outlined, 2, _currentIndex),
+            label: 'Won Auctions',
+          ),
+          BottomNavigationBarItem(
+            icon: buildIcon(Icons.receipt_long, 3, _currentIndex),
+            label: 'Orders',
+          ),
+          BottomNavigationBarItem(
+            icon: buildIcon(Icons.person_outline, 4, _currentIndex),
+            label: 'Profile',
+          ),
+        ],
       ),
     );
   }
