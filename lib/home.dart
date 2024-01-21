@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:bide_yako/styles/colors.dart';
 import 'package:bide_yako/utils/HelpfulFunctions.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -26,10 +25,10 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     _urls = [
       baseUrl,
-      baseUrl + "buybids",
-      baseUrl + "users/settings/7",
-      baseUrl + "users/settings/6",
       baseUrl + "users/settings/1",
+      baseUrl + "buybids",
+      baseUrl + "help/how_it_works",
+      baseUrl + "users/settings/4",
     ];
     return Scaffold(
       key: _scaffoldKey,
@@ -46,7 +45,7 @@ class _HomeState extends State<Home> {
             if (lastBackPressed == null || now.difference(lastBackPressed!) > Duration(seconds: 2)) {
               lastBackPressed = now;
               final snackBar = SnackBar(content: Text('Press back again to exit'));
-              _scaffoldKey.currentState!.showSnackBar(snackBar);
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
               return Future.value(false);
             }
             return Future.value(true);
@@ -101,23 +100,23 @@ class _HomeState extends State<Home> {
         items: [
           BottomNavigationBarItem(
             icon: buildIcon(Icons.home_outlined, 0, _currentIndex),
-            label: 'Home',
+            label: 'Auctions',
           ),
           BottomNavigationBarItem(
-            icon: buildIcon(Icons.shopping_cart_outlined, 1, _currentIndex),
+            icon: buildIcon(Icons.settings, 1, _currentIndex),
+            label: 'Settings',
+          ),
+          BottomNavigationBarItem(
+            icon: buildIcon(Icons.shopping_cart_outlined, 2, _currentIndex),
             label: 'Buy Bids',
           ),
           BottomNavigationBarItem(
-            icon: buildIcon(Icons.emoji_events_outlined, 2, _currentIndex),
-            label: 'Won Auctions',
+            icon: buildIcon(Icons.contact_support_outlined, 3, _currentIndex),
+            label: 'Help',
           ),
           BottomNavigationBarItem(
-            icon: buildIcon(Icons.receipt_long, 3, _currentIndex),
-            label: 'Orders',
-          ),
-          BottomNavigationBarItem(
-            icon: buildIcon(Icons.person_outline, 4, _currentIndex),
-            label: 'Profile',
+            icon: buildIcon(Icons.notifications_active_outlined, 4, _currentIndex),
+            label: 'Notification',
           ),
         ],
       ),
