@@ -3,6 +3,7 @@ import 'package:bide_yako/styles/colors.dart';
 import 'package:bide_yako/utils/HelpfulFunctions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class Home extends StatefulWidget {
@@ -68,6 +69,9 @@ class _HomeState extends State<Home> {
                 onWebViewCreated: (controller) {
                   _webViewController.complete(controller);
                 },
+                onWebResourceError: (error) async {
+                  _handleError(await _webViewController.future, error.failingUrl!, error.description);
+                },
               ),
               isLoading
                   ? Center(
@@ -120,6 +124,53 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
+    );
+  }
+
+  /// handle http errors
+  void _handleError(WebViewController controller, String url, String error) {
+    if (error == 'net::ERR_NAME_NOT_RESOLVED' || error == 'net::ERR_ADDRESS_UNREACHABLE') {
+      _showGetXDialog('No internet connection,Open WiFi or Data',controller,url);
+    } else if (error.contains('404')) {
+      _showGetXDialog('Page not found',controller,url);
+    } else if (error.contains('timeout')) {
+      _showGetXDialog('Connection timed out',controller,url);
+    } else {
+      _showGetXDialog("Something Went Wrong !,Check Your Internet and Retry",controller,url);
+    }
+    controller.loadUrl('about:blank'); // Clear the webview
+  }
+
+
+  /// getx dialog
+  void _showGetXDialog(String message,WebViewController controller,url) {
+    Get.dialog(
+      Dialog(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(message, textAlign: TextAlign.center),
+              SizedBox(height: 15),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    isLoading = true;
+                  });
+                  controller.loadUrl(url);
+                  Get.back();
+                  setState(() {
+                    isLoading = false;
+                  });
+                }, // Close the dialog
+                child: Text('Refresh'),
+              ),
+            ],
+          ),
+        ),
+      ),
+      barrierDismissible: false, // Make the dialog undismissible
     );
   }
 }

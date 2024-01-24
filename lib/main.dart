@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       childWidget: GetMaterialApp(
         title: 'Bide Yako Web',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.green,
         ),
         home: wrapper( childWidget: LoadingPage()),
       ),
