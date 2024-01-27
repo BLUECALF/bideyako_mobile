@@ -16,7 +16,7 @@ class _HomeState extends State<Home> {
   List<String> _urls = [];
 
   int _currentIndex = 0;
-  bool isLoading = true;
+  bool isLoading = false;
   final _webViewController = Completer<WebViewController>();
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -85,7 +85,7 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
+      /*bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) async {
           setState(() {
@@ -123,7 +123,7 @@ class _HomeState extends State<Home> {
             label: 'Notification',
           ),
         ],
-      ),
+      ),*/
     );
   }
 
